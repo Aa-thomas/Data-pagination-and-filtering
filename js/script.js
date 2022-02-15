@@ -12,11 +12,11 @@ For assistance:
 */
 
 
-//Reference variable for all student items
+//Reference variable for element containing all student items
 const studentItemList = document.querySelector('.student-list');
 
-//Reference variable for pagination buttons
-const linkList = document.querySelector('.link-list');
+//Reference variable for element containing all pagination buttons
+const pageButtonList = document.querySelector('.link-list');
 
 /*
 * Create the `showPage` function
@@ -40,7 +40,7 @@ function showPage(list, page) {
          const studentItem =
             `<li class="student-item cf">
                <div class="student-details">
-                  <img class="avatar" src="${list[i].picture.thumbnail}" alt="Profile Picture">
+                  <img class="avatar" src="${list[i].picture.large}" alt="Profile Picture">
                   <h3>${list[i].name.first} ${list[i].name.last}</h3>
                   <span class="email">${list[i].email}</span>
                </div>
@@ -65,8 +65,8 @@ function addPagination(list) {
    //Number of pages to be made
    const numOfPages = Math.ceil(list.length / 9);
 
-   //Clear HTML inside 'linkList' so that all pagination buttons are removed and only updated buttons are displayed
-   linkList.innerHTML = '';
+   //Clear HTML inside 'pageButtonList' so that all pagination buttons are removed and only updated buttons are displayed
+   pageButtonList.innerHTML = '';
 
    //Create pagination button element
    for (let i = 1; i <= numOfPages; i++) {
@@ -75,14 +75,13 @@ function addPagination(list) {
             <button type="button">${i}</button>
          </li>`;
       //Display pagination button element
-      linkList.insertAdjacentHTML('beforeEnd', pageButton);
+      pageButtonList.insertAdjacentHTML('beforeEnd', pageButton);
    }   
-   
    //Set the first pagination button to be active when page loads
-   document.querySelectorAll('button')[0].className = 'active';
+   pageButtonList.querySelector('button').className = 'active'; 
 
    //Add click event listener to pagination buttons
-   linkList.addEventListener('click', (e) => {
+   pageButtonList.addEventListener('click', (e) => {
       if (e.target.tagName === 'BUTTON') {
          //Remove 'active' class from current button
          document.querySelector('.active').className = '';
@@ -90,7 +89,7 @@ function addPagination(list) {
          e.target.className = 'active';
          //Update page
          showPage(list, e.target.textContent);  
-      }
+      }  
    });  
 }
 //Call function
@@ -117,10 +116,10 @@ function searchFilter(list, searchQuery) {
    const searchResults = [];
    
    //Convert users search query to lowercase so that search can be case insensitive
-   searchQuery = searchQuery.toLowerCase();
+   searchQuery.toLowerCase();
    
    //Reset pagination buttons so that number of buttons will change according to number of search results
-   linkList.innerHTML = '';
+   pageButtonList.innerHTML = '';
    
    //Loop through 'list'
    for (let i = 0; i < list.length; i++) {
@@ -130,21 +129,22 @@ function searchFilter(list, searchQuery) {
       //Push results into searchResults array
       if (studentFullName.includes(searchQuery)) {
          searchResults.push(list[i]);
-         
-         //Display results only if there are 1 or more items in searchResults array
-         if (searchResults.length > 0) {
-            showPage(searchResults, 1);
-            addPagination(searchResults);
-            
-         }
-         //Display error message by replacing 'studentList' HTML with selected message
-         if (searchResults.length === 0) {
-            studentItemList.innerHTML = '<span>No results found.</span>';
-            //Remove pagination buttons 
-            linkList.innerHTML = '';
-         }
       }
+   }   
+      
+   //Display results only if there are 1 or more items in searchResults array
+   if (searchResults.length > 0) {
+      showPage(searchResults, 1);
+      addPagination(searchResults);
    }
+   //Display error message by replacing 'studentList' HTML with selected message
+   else if (searchResults.length === 0) {
+      studentItemList.innerHTML = 'No results found.';
+      //Remove pagination buttons 
+      pageButtonList.innerHTML = '';
+   }
+      
+   
 }   
 
 
