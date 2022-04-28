@@ -116,7 +116,7 @@ function searchFilter(list, searchQuery) {
    const searchResults = [];
    
    //Convert users search query to lowercase so that search can be case insensitive
-   searchQuery.toLowerCase();
+   searchQuery = searchQuery.toLowerCase();
    
    //Reset pagination buttons so that number of buttons will change according to number of search results
    pageButtonList.innerHTML = '';
